@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AppLaunch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script>
+  /* ============================================
+     CONFIG — Edit this section only!
+  ============================================ */
+  const CONFIG = {
+    appName:      "AppName",
+    tagline:      "The one-liner that sells your app.",
+    description:  "A short paragraph about what your app does, who it's for, and why it's different. Keep it punchy — two or three sentences max.",
+    ctaLabel:     "Get Early Access",
+    ctaUrl:       "#",
+    ctaSecLabel:  "See How It Works",
+    ctaSecUrl:    "#",
+    darkMode:     "toggle",   // true | false | "toggle"
+    accentColor:  "#a78bfa",  // any hex color
+
+    features: [
+      { icon: "⚡", title: "Blazing Fast",      desc: "Built for speed from the ground up. No lag, no loading screens." },
+      { icon: "🔒", title: "Privacy First",     desc: "Your data stays yours. No tracking, no selling, no nonsense." },
+      { icon: "🎨", title: "Beautiful UI",      desc: "Designed with care. Every pixel has a purpose." },
+      { icon: "📱", title: "Works Everywhere",  desc: "iOS, Android, web — one experience across all your devices." },
+      { icon: "🔗", title: "Easy Integrations", desc: "Connects to the tools you already use in just a few clicks." },
+      { icon: "💬", title: "24/7 Support",      desc: "Real humans ready to help whenever you need it." },
+    ],
+
+    pricing: [
+      { plan: "Free",       price: "$0",  period: "/mo", features: ["3 projects", "Basic features", "Community support"],         cta: "Get started", featured: false },
+      { plan: "Pro",        price: "$12", period: "/mo", features: ["Unlimited projects", "All features", "Priority support", "Custom domain"], cta: "Get started", featured: true  },
+      { plan: "Enterprise", price: "$49", period: "/mo", features: ["Everything in Pro", "Dedicated support", "SLA guarantee", "Custom contract"], cta: "Contact us",  featured: false },
+    ],
+
+    footerLinks: [
+      { label: "Twitter",  url: "#" },
+      { label: "GitHub",   url: "#" },
+      { label: "Discord",  url: "#" },
+    ]
+  };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080808; --surface: #111; --border: #222;
+      --text: #f0f0f0; --muted: #666; --accent: #a78bfa;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem; border-bottom: 1px solid var(--border);
+      background: var(--bg); z-index: 100;
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--accent); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .nav-link { font-size: 0.85rem; color: var(--muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .nav-link:hover { color: var(--text); }
+    #themeToggle {
+      background: var(--surface); border: 1px solid var(--border); color: var(--text);
+      padding: 0.35rem 0.85rem; border-radius: 999px; cursor: pointer;
+      font-size: 0.8rem; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.2s; display: none;
+    }
+    #themeToggle:hover { border-color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 8rem 2rem 5rem;
+      max-width: 780px; margin: 0 auto;
+    }
+    .hero-tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.5rem;
+      border: 1px solid var(--border); padding: 5px 16px; border-radius: 999px;
+      background: var(--surface);
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-weight: 800; letter-spacing: -2.5px;
+      line-height: 1.02; margin-bottom: 1.5rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 1.1rem; color: var(--muted); max-width: 520px; line-height: 1.7; margin-bottom: 2.5rem; }
+    .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 0.8rem 2rem; background: var(--accent); color: #fff;
+      border: none; border-radius: 999px; font-size: 0.95rem;
+      font-weight: 600; cursor: pointer; text-decoration: none;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+    .btn-ghost {
+      padding: 0.8rem 2rem; background: transparent; color: var(--text);
+      border: 1px solid var(--border); border-radius: 999px; font-size: 0.95rem;
+      font-weight: 500; cursor: pointer; text-decoration: none;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* MOCK SCREEN */
+    .screen-wrap {
+      max-width: 700px; margin: 0 auto 5rem;
+      padding: 0 2rem;
+    }
+    .screen {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+    }
+    .screen-bar {
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1rem; display: flex; gap: 6px; align-items: center;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #ff5f57; }
+    .dot.y { background: #febc2e; }
+    .dot.g { background: #28c840; }
+    .screen-body {
+      padding: 2rem; min-height: 200px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .screen-placeholder { font-size: 0.85rem; color: var(--muted); text-align: center; line-height: 1.7; }
+    .screen-placeholder strong { color: var(--text); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    /* SECTIONS */
+    .section { max-width: 960px; margin: 0 auto; padding: 5rem 2rem; }
+    .section-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .section h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 0.75rem; }
+    .section-sub { font-size: 1rem; color: var(--muted); margin-bottom: 3rem; max-width: 480px; line-height: 1.6; }
+    .divider { width: 100%; height: 1px; background: var(--border); }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.5rem; transition: all 0.2s;
+    }
+    .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .feature-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .feature-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .feature-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+
+    /* PRICING */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .pricing-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 1.75rem; transition: all 0.2s;
+    }
+    .pricing-card.featured { border: 2px solid var(--accent); }
+    .featured-badge {
+      display: inline-block; font-size: 0.7rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 999px; margin-bottom: 12px;
+      background: var(--accent); color: #fff;
+    }
+    .plan-name { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; }
+    .plan-price { font-size: 2.2rem; font-weight: 800; font-family: 'Syne', sans-serif; margin-bottom: 1.25rem; }
+    .plan-price span { font-size: 0.9rem; font-weight: 400; color: var(--muted); font-family: 'DM Sans', sans-serif; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
+    .plan-features li { font-size: 0.875rem; color: var(--muted); }
+    .plan-features li::before { content: "✓  "; color: var(--accent); font-weight: 600; }
+    .btn-plan {
+      width: 100%; padding: 0.7rem; border-radius: 999px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .btn-plan.outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-plan.outline:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-plan.filled { background: var(--accent); border: none; color: #fff; }
+    .btn-plan.filled:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border); padding: 2.5rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; max-width: 960px; margin: 0 auto;
+    }
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--accent); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-link { font-size: 0.85rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-link:hover { color: var(--text); }
+    .footer-copy { font-size: 0.78rem; color: var(--muted); width: 100%; }
+    .footer-copy a { color: var(--muted); font-weight: 600; text-decoration: none; }
+    .footer-copy a:hover { color: var(--text); }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.25rem; }
+      .hero { padding: 7rem 1.25rem 4rem; }
+      .section { padding: 3.5rem 1.25rem; }
+      footer { padding: 2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-logo" id="navLogo"></span>
+    <div class="nav-right">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#pricing" class="nav-link">Pricing</a>
+      <button id="themeToggle">☀️ Light</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-tag" id="heroTag">✦ Now available</span>
+    <h1 id="heroTitle"></h1>
+    <p id="heroDesc"></p>
+    <div class="hero-cta">
+      <a id="ctaPrimary" href="#" class="btn-primary"></a>
+      <a id="ctaSec" href="#" class="btn-ghost"></a>
+    </div>
+  </div>
+
+  <!-- MOCK SCREEN -->
+  <div class="screen-wrap">
+    <div class="screen">
+      <div class="screen-bar">
+        <div class="dot r"></div>
+        <div class="dot y"></div>
+        <div class="dot g"></div>
+      </div>
+      <div class="screen-body">
+        <div class="screen-placeholder">
+          <strong>Your app screenshot goes here</strong>
+          Replace this block with an &lt;img&gt; tag pointing to your screenshot
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FEATURES -->
+  <div class="section" id="features">
+    <p class="section-label">✦ Features</p>
+    <h2>Everything you need.</h2>
+    <p class="section-sub">Built with the features that matter most — nothing bloated, nothing missing.</p>
+    <div class="features-grid" id="featuresGrid"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PRICING -->
+  <div class="section" id="pricing">
+    <p class="section-label">✦ Pricing</p>
+    <h2>Simple, honest pricing.</h2>
+    <p class="section-sub">No hidden fees. No surprise charges. Cancel anytime.</p>
+    <div class="pricing-grid" id="pricingGrid"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo" id="footerLogo"></span>
+    <div class="footer-links" id="footerLinks"></div>
+    <p class="footer-copy">app-landing-page-template was made by <a href="https://github.com/bloxiebuilds" target="_blank">bloxiebuilds</a></p>
+  </footer>
+
+  <script>
+    // Theme
+    var btn = document.getElementById('themeToggle');
+    var isDark = true;
+    function setDark() {
+      document.documentElement.style.setProperty('--bg',      '#080808');
+      document.documentElement.style.setProperty('--surface', '#111111');
+      document.documentElement.style.setProperty('--border',  '#222222');
+      document.documentElement.style.setProperty('--text',    '#f0f0f0');
+      document.documentElement.style.setProperty('--muted',   '#666666');
+      btn.textContent = '☀️ Light'; isDark = true;
+    }
+    function setLight() {
+      document.documentElement.style.setProperty('--bg',      '#f8f8f8');
+      document.documentElement.style.setProperty('--surface', '#ffffff');
+      document.documentElement.style.setProperty('--border',  '#e5e5e5');
+      document.documentElement.style.setProperty('--text',    '#111111');
+      document.documentElement.style.setProperty('--muted',   '#888888');
+      btn.textContent = '🌙 Dark'; isDark = false;
+    }
+    document.documentElement.style.setProperty('--accent', CONFIG.accentColor);
+    if      (CONFIG.darkMode === true)   { setDark(); }
+    else if (CONFIG.darkMode === false)  { setLight(); }
+    else { setDark(); btn.style.display = 'block'; }
+    btn.addEventListener('click', function() { isDark ? setLight() : setDark(); });
+
+    // Render from CONFIG
+    document.getElementById('navLogo').textContent    = CONFIG.appName;
+    document.getElementById('footerLogo').textContent = CONFIG.appName;
+    document.getElementById('heroTitle').innerHTML    = CONFIG.appName + '.<br/><span>' + CONFIG.tagline + '</span>';
+    document.getElementById('heroDesc').textContent   = CONFIG.description;
+    document.getElementById('ctaPrimary').textContent = CONFIG.ctaLabel;
+    document.getElementById('ctaPrimary').href        = CONFIG.ctaUrl;
+    document.getElementById('ctaSec').textContent     = CONFIG.ctaSecLabel;
+    document.getElementById('ctaSec').href            = CONFIG.ctaSecUrl;
+
+    // Features
+    var fg = document.getElementById('featuresGrid');
+    CONFIG.features.forEach(function(f) {
+      fg.innerHTML += '<div class="feature-card"><div class="feature-icon">' + f.icon + '</div><p class="feature-title">' + f.title + '</p><p class="feature-desc">' + f.desc + '</p></div>';
+    });
+
+    // Pricing
+    var pg = document.getElementById('pricingGrid');
+    CONFIG.pricing.forEach(function(p) {
+      var badge = p.featured ? '<span class="featured-badge">Most popular</span><br/>' : '';
+      var btnClass = p.featured ? 'filled' : 'outline';
+      pg.innerHTML += '<div class="pricing-card' + (p.featured ? ' featured' : '') + '">' + badge + '<p class="plan-name">' + p.plan + '</p><p class="plan-price">' + p.price + '<span>' + p.period + '</span></p><ul class="plan-features">' + p.features.map(function(f){ return '<li>' + f + '</li>'; }).join('') + '</ul><button class="btn-plan ' + btnClass + '">' + p.cta + '</button></div>';
+    });
+
+    // Footer links
+    var fl = document.getElementById('footerLinks');
+    CONFIG.footerLinks.forEach(function(l) {
+      fl.innerHTML += '<a href="' + l.url + '" class="footer-link" target="_blank">' + l.label + '</a>';
+    });
+  </script>
+</body>
+</html>
